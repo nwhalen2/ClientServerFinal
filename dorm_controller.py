@@ -76,7 +76,7 @@ class DormController(object):
 
     def POST_INDEX(self):
         output = {'result':'success'}
-        #d_id = int(d_id)
+        
         # extract msg from body
         data = cherrypy.request.body.read().decode('utf-8')
         print(data)
@@ -95,19 +95,6 @@ class DormController(object):
             dorm.append(data['mascot'])
 
             self.ddb.set_dorm(newID, dorm)
-
-        #return json.dumps(output)
-        #output = {'result':'success'}
-        # extract msg from body
-        #data = cherrypy.request.body.read().decode('utf-8')
-        #data = json.loads(data)
-        #print("body data: " + str(data))
-
-        #try:
-            #dorms = list(self.ddb.get_dorms())
-            #newID = int(dorms[-1]) + 1
-            #self.ddb.dorm_info[newID] = data
-            #output['id'] = newID
             
         except Exception as ex:
             output['result'] = 'error'
@@ -133,7 +120,6 @@ class DormController(object):
     def DELETE_INDEX(self):
         output = {'result':'success'}
         try:
-            #for key, value in self.myd.items():
             allDorms = list(self.ddb.get_dorms())
             for d_id in allDorms:
                 self.ddb.delete_dorm(d_id)

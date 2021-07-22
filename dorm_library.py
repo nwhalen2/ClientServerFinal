@@ -7,6 +7,8 @@ class _dorm_database:
 
     def load_dorms(self, dorm_file):
         f = open(dorm_file)
+
+        # create dictionary of lists to hold dorm info
         for line in f:
                 line = line.rstrip()
                 components = line.split("--")
@@ -26,12 +28,6 @@ class _dorm_database:
     def get_dorm(self, d_id):
         try:
             info = list(self.dorm_info[d_id])
-            #year = int(self.dorm_info[d_id][1])
-            #gender = self.dorm_info[d_id][2]
-            #quad = self.dorm_info[d_id][3]
-            #mascot = self.dorm_info[d_id][4]
-
-            #dorm = list(year, gender, quad, mascot)
         except Exception as ex:
             info = None
         return info
