@@ -1,11 +1,22 @@
 console.log("page loaded!");
 
 // connect button listeners
-var showButton = document.getElementById('show');
-showButton.onmouseup = makeNetworkCallToDormApi("all");
+var dormButton = document.getElementById('dorm');
+dormButton.onmouseup = getName;
 
 var allButton = document.getElementById('all');
-allButton.onmouseup = getName;
+allButton.onclick = function() {
+    makeNetworkCallToDormApi('all');
+}
+
+var clearButton = document.getElementById('clear');
+clearButton.onclick = function() {
+    let clearDorms = '';
+    let response_item = document.getElementById("dorm-names");
+    response_item.innerHTML = clearDorms;
+    let photo = document.getElementById('photo');
+    photo.src = "img/dome.jpg";
+}
 
 
 function getName(){
@@ -14,6 +25,7 @@ function getName(){
     // get name from user
     var name = document.getElementById('name').value;
     console.log(name);
+    name = name.trim();
     // make network call to age api with the user name
     if(name) {
         makeNetworkCallToDormApi(name);
@@ -28,11 +40,10 @@ function makeNetworkCallToDormApi(name){
     var xhr = new XMLHttpRequest(); // 1. create xhr object
     xhr.open("GET", url, true); // 2. configure the object
 
-    xhr.onload = function(e){
-        console.log('age api onload triggered');
-        //console.log('network response received = ' + xhr.responseText);
-        if(name == "all") showAll(xhr.responseText);
-        else getIDFromName(name, xhr.responseText);
+    xhr.onload = function(e){ 
+        console.log("name: " + name);
+        if(name == 'all'){ showAll(xhr.responseText);}
+        else {getIDFromName(name, xhr.responseText);}
     } // end of xhr.onload
 
     xhr.onerror = function(e){
@@ -43,32 +54,33 @@ function makeNetworkCallToDormApi(name){
 } // end of makeNetworkCallToAgeApi
 
 function showAll(response_text) {
+    console.log("entered showAll");
     var response_json = JSON.parse(response_text);
     
     let allDorms = '';
-    for(let i = 1; i <= 33; i++) {
-        allDorms = allDorms + "\n" + response_json[i]['name'];
+    allDorms = allDorms + response_json[1]['name'];
+    for(let i = 2; i <= 33; i++) {
+        allDorms = allDorms + " : " + response_json[i]['name'];
     }
     
     let response_item = document.getElementById("dorm-names"); 
     let text = document.createTextNode(allDorms);
-    response_item.innerHTML = text;
+    response_item.innerHTML = allDorms;
 
 }
 
-
 function getIDFromName(name, response_text){
-    // extract age information from json response
+    // extract dorm information from json response
     var response_json = JSON.parse(response_text);
-    console.log("STEDS: " + response_json[30]['name'])
-    //console.log("response: " + response_text)
 
+    // find id given name of dorm
     for (let i = 1; i <= 33; i++) {
         if (response_json[i]['name'].toLowerCase() == name.toLowerCase()) {
             var d_id = i;
         }
     }
 
+    // reset text areas
     let no_dorm_item = document.getElementById("not-a-dorm"); 
     no_dorm_item.innerHTML = '';
     let response_item = document.getElementById("response");
@@ -76,6 +88,12 @@ function getIDFromName(name, response_text){
 
 
     if(d_id != null) {
+        updateButton = document.getElementById("dorm");
+        updateButton.innerHTML = "UPDATE";
+
+        updatePhoto(d_id);
+
+        // show options to user via buttons
         var yearButton = document.getElementById('year');
         var sexButton = document.getElementById('sex');
         var quadButton = document.getElementById('quad');
@@ -84,10 +102,11 @@ function getIDFromName(name, response_text){
 
         var name = response_json[d_id]['name'];
         var year = response_json[d_id]['year'];
-        console.log("year = " + year);
         var sex = response_json[d_id]['gender'];
         var quad = response_json[d_id]['quad'];
         var mascot = response_json[d_id]['mascot'];
+
+        // display desired information to user based on button options
         yearButton.onmouseup = function() {
             var response_string = name + " Hall was established in " + year + ".";
             response_item.innerHTML = response_string;
@@ -107,9 +126,12 @@ function getIDFromName(name, response_text){
 
     }
     else {
-        var no_dorm_string = name + " is not a dorm at ND. Try again.";
+        var no_dorm_string = name + " is not a dorm at ND.";
         let text = document.createTextNode(no_dorm_string);
         no_dorm_item.appendChild(text);
+
+        tryAgainButton = document.getElementById("dorm");
+        tryAgainButton.innerHTML = "TRY AGAIN";
     }
  
 }
@@ -120,6 +142,113 @@ function showOptions(year, sex, quad, mascot) {
     sex.innerHTML = "GENDER HOUSED";
     quad.innerHTML = "QUAD LOCATED";
     mascot.innerHTML = "MASCOT";
+}
+
+function updatePhoto(d_id){
+    var photo = document.getElementById('photo');
+
+    console.log("id = " + d_id);
+    switch(d_id) {
+        case 1: 
+            photo.src = "img/alumni.jpeg"; 
+            break;
+        case 2: 
+            photo.src="img/badin.jpeg";
+            break;
+        case 3:
+            photo.src = "img/baumer.jpg";
+            break;
+        case 4: 
+            photo.src = "img/bp.jpg";
+            break;
+        case 5:
+            photo.src = "img/carroll.jpeg";
+            break;
+        case 6:
+            photo.src = "img/cavanaugh.jpeg";
+            break;
+        case 7:
+            photo.src = "img/dillon.jpeg";
+            break;
+        case 8:
+            photo.src = "img/duncan.jpeg";
+            break;
+        case 9:
+            photo.src = "img/dunne.jpeg";
+            break;
+        case 10:
+            photo.src = "img/farley.jpeg";
+            break;
+        case 11:
+            photo.src = "img/fisher.jpeg";
+            break;
+        case 12:
+            photo.src = "img/flaherty.jpeg";
+            break;
+        case 13:
+            photo.src = "img/howard.jpeg";
+            break;
+        case 14:
+            photo.src = "img/jfam.jpg";
+            break;
+        case 15:
+            photo.src = "img/keenan.jpeg";
+            break;
+        case 16: 
+            photo.src = "img/keough.jpeg";
+            break;
+        case 17:
+            photo.src = "img/knott.jpeg";
+            break;
+        case 18:
+            photo.src = "img/lewis.jpeg";
+            break;
+        case 19:
+            photo.src = "img/lyons.jpeg";
+            break;
+        case 20:
+            photo.src = "img/mcglinn.jpeg";
+            break;
+        case 21:
+            photo.src = "img/morrissey.jpeg";
+            break;
+        case 22:
+            photo.src = "img/oneill.jpeg";
+            break;
+        case 23:
+            photo.src = "img/pangborn.jpeg";
+            break;
+        case 24:
+            photo.src = "img/pe.jpeg";
+            break;
+        case 25:
+            photo.src = "img/pw.jpeg";
+            break;
+        case 26:
+            photo.src = "img/ryan.jpeg";
+            break;
+        case 27:
+            photo.src = "img/siegfried.jpeg";
+            break;
+        case 28:
+            photo.src = "img/sorin.jpeg";
+            break;
+        case 29:
+            photo.src = "img/stanford.jpeg";
+            break;
+        case 30:
+            photo.src = "img/steds.jpeg";
+            break;
+        case 31:
+            photo.src = "img/walsh.jpeg";
+            break;
+        case 32:
+            photo.src = "img/welshfam.jpeg";
+            break;
+        case 33: 
+            photo.src = "img/zahm.jpeg"; 
+            break;
+    }
 }
 
 function getYear(response) {
@@ -140,66 +269,3 @@ function getAll(response_json) {
     let response_string = name + " Hall is a " + sex.toLowerCase() + " dorm founded in " + year + ". It resides on " + quad + " Quad and is represented by the mascot " + mascot + ". ";
     return response_string;
 }
-
-/*function showResponse(response) {
-
-    let response_item = document.getElementById("response"); // "label" is a class name
-    //label_item.setAttribute("id", "dynamic-label-1");
-    //response_item.setAttribute("style", "text-align: center");
-    let text = document.createTextNode(response);
-    //label_item.appendChild(item_text);
-    response_item.appendChild(text);
-
-    //var response_div = document.getElementById("response-div");
-    //response_div.appendSibling(label_item);
-}*/
-    //box.setAttribute("style", "color: white");
-    //label1.innerHTML = "We prefer this number: " + response_json['data'] + "\n";
-    
-    /*var num2 = response_json['data'];
-    console.log("num2: " + num2);
-    // and make nw call to numbers api
-    //makeNetworkCallToCatApi(num2);
-}
-
-
-/*
-function makeNetworkCallToCatApi(num2){
-    console.log("entered makeNetworkCallToNumbersApi num2 = " + num2);
-    // TODO
-    var url = "https://catfact.ninja/fact?max_length=" + num2;
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
-
-    xhr.onload = function(e){
-      var response_text = xhr.responseText;
-      console.log('network response received = ' + xhr.responseText);
-      updateCatFact(response_text);
-  } // end of xhr.onload
-
-  xhr.onerror = function(e){
-      console.log('age api onerror triggered' + xhr.statusText);
-  } // end of xhr.onerror
-
-  xhr.send(null); 
-} // end of makeNetworkCallToNumbersApi
-*/
-
-
-/*
-function updateCatFact(response_text) {
-
-  var response_json = JSON.parse(response_text);
-  var cat_fact = response_json["fact"];
-  console.log("cat fact: " + cat_fact);
-
-  label_item = document.createElement("label"); // "label" is a class name
-  label_item.setAttribute("id", "dynamic-label-1");
-  label_item.setAttribute("style", "text-align: center");
-  var item_text = document.createTextNode("\n" + cat_fact);
-  label_item.appendChild(item_text);
-
-  var response_div = document.getElementById("response-div");
-  response_div.appendChild(label_item);
-}
-*/

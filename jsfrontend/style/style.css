@@ -3,7 +3,14 @@
     text-align: center
 }
 
+img {
+    height: 200px;
+}
+
 button {
     height: 2em;
 }
   
+.bold {
+    font-weight: bold;
+}
